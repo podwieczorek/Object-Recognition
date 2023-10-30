@@ -1,20 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, SafeAreaView } from 'react-native';
+
+import HomeScreen from './screens/HomeScreen';
+import CameraScreen from './screens/CameraScreen';
 
 export default function App() {
+
+  const [isCameraScreenVisible, setCameraScreen] = useState(false)
+
+  function goToCameraScreenHandler(){
+    setCameraScreen(true);
+  }
+
+  let currentScreen = <HomeScreen onClickButton={goToCameraScreenHandler}/>;
+  
+  if (isCameraScreenVisible) {
+    currentScreen = <CameraScreen />;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.rootScreen}>
+      {currentScreen}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  rootScreen: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
