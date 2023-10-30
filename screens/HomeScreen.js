@@ -1,10 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Button } from "react-native";
 
-function HomeScreen() {
+function HomeScreen({onClickButton}) {
     return (
         <View style={styles.container}>
             <Text>Home screen</Text>
+            <Button
+                title="Take me to camera screen"
+                color="#a065ec"
+                onPress={onClickButton}
+            />
             <StatusBar style="auto" />
         </View>
     );
