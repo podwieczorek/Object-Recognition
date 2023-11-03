@@ -1,11 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
-import { useState, useEffect } from 'react';
-import { View, StyleSheet, Text } from "react-native";
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
 import { Camera } from 'expo-camera';
 
 function CameraScreen() {
     const [hasPermission, setHasPermission] = useState(null);
-    const [type, setType] = useState(Camera.Constants.Type.back);
 
     useEffect(() => {
         (async () => {
@@ -24,9 +22,7 @@ function CameraScreen() {
 
     return (
         <View style={styles.container}>
-            <Camera style={styles.camera} type={type}>
-                <Text> </Text>
-            </Camera>
+            <Camera style={styles.camera} type={Camera.Constants.Type.back} />
         </View>
     );
 }
@@ -36,11 +32,8 @@ export default CameraScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     camera: {
-        flex: 100,
+        flex: 1,
     },
-})
+});
