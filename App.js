@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
-
+import React from 'react';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,26 +7,9 @@ import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from './screens/HomeScreen';
 import CameraScreen from './screens/CameraScreen';
 
-// for drawer navigation bar
-// TODO install cocoa pods to run < npx pod-install ios >
-import 'react-native-gesture-handler';
-
 const Drawer = createDrawerNavigator();
 
 export default function App() {
-
-  const [isCameraScreenVisible, setCameraScreen] = useState(false)
-
-  function goToCameraScreenHandler(){
-    setCameraScreen(true);
-  }
-
-  let currentScreen = <HomeScreen onClickButton={goToCameraScreenHandler}/>;
-  
-  if (isCameraScreenVisible) {
-    currentScreen = <CameraScreen />;
-  }
-
   return (
     <NavigationContainer>
       <Drawer.Navigator
@@ -40,7 +22,7 @@ export default function App() {
       >
         <Drawer.Screen
           name="Home"
-          component={HomeScreen}
+          component={HomeScreenWithNavigation}
           options={{
             drawerLabel: 'Home Screen',
             drawerIcon: ({ color, size }) => (
@@ -61,6 +43,14 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const HomeScreenWithNavigation = ({ navigation }) => {
+  const goToCameraScreenHandler = () => {
+    navigation.navigate('Object recognition');
+  };
+
+  return <HomeScreen onClickButton={goToCameraScreenHandler} />;
+};
 
 const styles = StyleSheet.create({
   rootScreen: {

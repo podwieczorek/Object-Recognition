@@ -4,10 +4,11 @@ import { View, StyleSheet, Text, Button } from "react-native";
 function HomeScreen({onClickButton}) {
     return (
         <View style={styles.container}>
-            <Text>Home screen</Text>
+            <Text>Welcome in our fabulous app!</Text>
             <Button
                 title="Take me to camera screen"
                 color="#a065ec"
+                
                 onPress={onClickButton}
             />
             <StatusBar style="auto" />
