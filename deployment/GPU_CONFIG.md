@@ -61,5 +61,6 @@ https://www.youtube.com/watch?v=YsmhKar8oOc
 
 If any error exists so far try issuing this command in Powershell:
 ```
-PS C:\some-path> setx CUDA_VISIBLE_DEVICES 1
+PS C:\some-path> setx CUDA_VISIBLE_DEVICES N
 ```
+Where N is your GPU ID (if you have only one graphic card, then N = 0)
