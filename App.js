@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import HomeScreen from './screens/HomeScreen';
 import CameraScreen from './screens/CameraScreen';
+import AboutUsScreen from './screens/AboutUsScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -20,6 +21,7 @@ export default function App() {
           drawerActiveTintColor: '#3c0a6b',
         }}
       >
+
         <Drawer.Screen
           name="Home"
           component={HomeScreenWithNavigation}
@@ -30,12 +32,23 @@ export default function App() {
             ),
           }}
         />
+
         <Drawer.Screen
-          name="Object recognition"
+          name="Object Recognition"
           component={CameraScreen}
           options={{
             drawerIcon: ({ color, size }) => (
               <Ionicons name="camera-outline" color={color} size={size} />
+            ),
+          }}
+        />
+
+        <Drawer.Screen
+          name="About Us"
+          component={AboutUsScreen}
+          options={{
+            drawerIcon: ({ color, size }) => (
+              <Ionicons name="information-outline" color={color} size={size} />
             ),
           }}
         />
@@ -46,7 +59,7 @@ export default function App() {
 
 const HomeScreenWithNavigation = ({ navigation }) => {
   const goToCameraScreenHandler = () => {
-    navigation.navigate('Object recognition');
+    navigation.navigate('Object Recognition');
   };
 
   return <HomeScreen onClickButton={goToCameraScreenHandler} />;
