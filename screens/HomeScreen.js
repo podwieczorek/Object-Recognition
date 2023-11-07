@@ -1,20 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, Text, Button, Image} from "react-native";
 
+import CustomButton from "../components/CustomButton";
+
 function HomeScreen({onClickButton}) {
     return (
         <View style={styles.container}>
-            <Text style={styles.upperText}>Object Recoginition</Text>
-            <View>
+            
+            <Text style={styles.upperText}>Object Recoginition Application</Text>
+            
+            <View style={styles.imageContainer}>
                 <Image
                     source={require('../assets/images/object.png')}
                     style={styles.image}
                 />
             </View>
             
-            <Button
+            <CustomButton
                 title="GET STARTED"
-                color="#5e0acc"
                 onPress={onClickButton}
             />
 
@@ -41,14 +44,10 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase',
         fontWeight: 'bold',
     },
-    cameraButton: {
-
-    },
     imageContainer: {
         alignItems: 'center',
-        marginTop: 20,
-        marginTop: 20,
-
+        marginTop: 40,
+        marginBottom: 50,
     },
     image: {
         width: 250,
