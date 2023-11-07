@@ -1,21 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, StyleSheet, Text, Button } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 
-function HomeScreen({onClickButton}) {
+function AboutUsScreen() {
     return (
         <View style={styles.container}>
-            <Text>Welcome in our fabulous app!</Text>
-            <Button
-                title="Take me to camera screen"
-                color="#a065ec"
-                onPress={onClickButton}
-            />
+            <Text>About us:</Text>
             <StatusBar style="auto" />
         </View>
     );
 }
 
-export default HomeScreen;
+export default AboutUsScreen;
 
 const styles = StyleSheet.create({
     container: {
