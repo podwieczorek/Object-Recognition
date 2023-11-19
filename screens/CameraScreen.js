@@ -22,7 +22,12 @@ function CameraScreen() {
 
     return (
         <View style={styles.container}>
-            <Camera style={styles.camera} type={Camera.Constants.Type.back} />
+            <Camera style={styles.camera} type={Camera.Constants.Type.back} >
+            <View style={styles.overlay}>
+                <View style={styles.greenRectangle} />
+            </View>
+            </Camera>
+            
         </View>
     );
 }
@@ -36,4 +41,16 @@ const styles = StyleSheet.create({
     camera: {
         flex: 1,
     },
+    overlay: {
+        ...StyleSheet.absoluteFillObject,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+    
+    greenRectangle: {
+        width: 200,
+        height: 200,
+        borderColor: '#5e0acc',
+        borderWidth: 4,
+      },
 });
