@@ -8,8 +8,7 @@ function CameraScreen() {
     const [hasPermission, setHasPermission] = useState(null);
     const cameraRef = useRef(null);
     const isFocused = useIsFocused();
-    const isResponseOk = true;
-    const response = {width: 100, height: 100, top: 100, left:100, objectLabel: "Dummy label"};
+    const [response, setResponse] = useState(null);
 
     useEffect(() => {
         (async () => {
@@ -25,8 +24,36 @@ function CameraScreen() {
         }
     };
 
+    const sendPicture = async (photo) => {
+        try {
+            const formData = new FormData();
+            formData.append('photo', {
+                uri: photo.uri,
+                type: 'image/jpeg',
+                name: 'photo.jpg',
+            });
+
+            const response = await fetch('YOUR_API_ENDPOINT', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (response.ok) {
+                const returned_json = await response.json();
+                setResponse(returned_json); // Set the response data
+            } else {
+                console.error('Failed. HTTP status code:', response.status);
+            }
+        } catch (error) {
+            console.error('Error: ', error);
+        }
+    };
+
     const drawBoundingBox = () => {
-        if (isResponseOk) {
+        if (response) {
             return (
                 <BoundingBox
                     width={response.width}
@@ -42,7 +69,7 @@ function CameraScreen() {
 
     const startAutomaticCapture = () => {
         setInterval(() => {
-            //takePictureAndSend();
+            takePictureAndSend();
         }, 200); // Capture, send a picture, draw bounding boxes every 200 ms
     };
 
