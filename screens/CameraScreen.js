@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Camera } from 'expo-camera';
+import { useIsFocused } from '@react-navigation/native'; // Import useIsFocused
 
 function CameraScreen() {
     const [hasPermission, setHasPermission] = useState(null);
     const [boundingBox, setBoundingBox] = useState(null);
     const cameraRef = useRef(null);
+    const isFocused = useIsFocused(); // Use useIsFocused hook
 
     useEffect(() => {
         (async () => {
@@ -15,7 +17,7 @@ function CameraScreen() {
     }, []);
 
     const takePictureAndSend = async () => {
-        if (cameraRef.current) {
+        if (cameraRef.current && isFocused) {
             const photo = await cameraRef.current.takePictureAsync();
             sendPicture(photo);
             drawBoundingBox();
@@ -92,9 +94,11 @@ function CameraScreen() {
 
     return (
         <View style={styles.container}>
-            <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={cameraRef} onCameraReady={startAutomaticCapture}>
-                {drawBoundingBox()}
-            </Camera>
+            {isFocused && ( // Only render the Camera when the screen is focused
+                <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={cameraRef} onCameraReady={startAutomaticCapture}>
+                    {drawBoundingBox()}
+                </Camera>
+            )}
         </View>
     );
 }
