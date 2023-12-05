@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Camera } from 'expo-camera';
-import { useIsFocused } from '@react-navigation/native'; // Import useIsFocused
+import { useIsFocused } from '@react-navigation/native';
+import BoundingBox from '../components/BoundingBox';
 
 function CameraScreen() {
     const [hasPermission, setHasPermission] = useState(null);
-    const [boundingBox, setBoundingBox] = useState(null);
     const cameraRef = useRef(null);
-    const isFocused = useIsFocused(); // Use useIsFocused hook
+    const isFocused = useIsFocused();
+    const isResponseOk = true;
+    const response = {width: 100, height: 100, top: 100, left:100, objectLabel: "Dummy label"};
 
     useEffect(() => {
         (async () => {
@@ -20,67 +22,27 @@ function CameraScreen() {
         if (cameraRef.current && isFocused) {
             const photo = await cameraRef.current.takePictureAsync();
             sendPicture(photo);
-            drawBoundingBox();
         }
-    };
-
-    const sendPicture = async (photo) => {
-
-        // try {
-        //     const formData = new FormData();
-        //     formData.append('photo', {
-        //         uri: photo.uri,
-        //         type: 'image/jpeg',
-        //         name: 'photo.jpg',
-        //     });
-
-        //     const response = await fetch('YOUR_API_ENDPOINT', {
-        //         method: 'POST',
-        //         body: formData,
-        //         headers: {
-        //             'Content-Type': 'multipart/form-data',
-        //         },
-        //     });
-
-        //     if (response.ok) {
-        //         const returned_json = await response.json();
-
-        //         setBoundingBox({ top, left, width, height });
-        //     } else {
-        //         console.error('Failed. HTTP status code:', response.status);
-        //     }
-        // } catch (error) {
-        //     console.error('Error: ', error);
-        // }
     };
 
     const drawBoundingBox = () => {
-        if (boundingBox) {
-            const { top, left, width, height } = boundingBox;
-
+        if (isResponseOk) {
             return (
-                <View style={{ position: 'absolute', top, left }}>
-                    <View
-                        style={{
-                            width,
-                            height,
-                            borderColor: '#5e0acc',
-                            borderWidth: 2,
-                        }}
-                    />
-                    <Text style={{ color: '#5e0acc', position: 'absolute', bottom: height, left: 0, padding: 2, backgroundColor: 'transparent' }}>
-                        object
-                    </Text>
-                </View>
+                <BoundingBox
+                    width={response.width}
+                    height={response.height}
+                    top={response.top}
+                    left={response.left}
+                    objectLabel={response.objectLabel}
+                />
             );
         }
-
         return null;
     };
 
     const startAutomaticCapture = () => {
         setInterval(() => {
-            takePictureAndSend();
+            //takePictureAndSend();
         }, 200); // Capture, send a picture, draw bounding boxes every 200 ms
     };
 
@@ -94,7 +56,7 @@ function CameraScreen() {
 
     return (
         <View style={styles.container}>
-            {isFocused && ( // Only render the Camera when the screen is focused
+            {isFocused && ( // Only render the Camera when the screen is focused, without it the camera screen is visible only the first time
                 <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={cameraRef} onCameraReady={startAutomaticCapture}>
                     {drawBoundingBox()}
                 </Camera>

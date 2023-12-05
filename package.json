@@ -12,6 +12,7 @@
     "@react-navigation/drawer": "^6.6.6",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
+    "axios": "^1.6.2",
     "expo": "^49.0.16",
     "expo-camera": "~13.4.4",
     "expo-status-bar": "~1.6.0",
