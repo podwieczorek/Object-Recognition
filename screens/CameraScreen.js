@@ -3,6 +3,7 @@ import { View, StyleSheet, Text } from 'react-native';
 import { Camera } from 'expo-camera';
 import { useIsFocused } from '@react-navigation/native';
 import BoundingBox from '../components/BoundingBox';
+import axios from 'axios';
 
 function CameraScreen() {
     const [hasPermission, setHasPermission] = useState(null);
@@ -18,9 +19,18 @@ function CameraScreen() {
     }, []);
 
     const takePictureAndSend = async () => {
-        if (cameraRef.current && isFocused) {
-            const photo = await cameraRef.current.takePictureAsync();
-            sendPicture(photo);
+        try {
+            if (cameraRef.current && isFocused) {
+                const photo = await cameraRef.current.takePictureAsync();
+                console.log('Captured Photo:', photo);
+                if (photo) {
+                    await sendPicture(photo);
+                } else {
+                    console.error('Failed to capture a photo.');
+                }
+            }
+        } catch (error) {
+            console.error('Error while taking and sending a picture:', error);
         }
     };
 
@@ -32,23 +42,24 @@ function CameraScreen() {
                 type: 'image/jpeg',
                 name: 'photo.jpg',
             });
+            console.log(formData);
 
-            const response = await fetch('YOUR_API_ENDPOINT', {
-                method: 'POST',
-                body: formData,
+            const response = await axios.post('http://34.168.74.2:5000/detections', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-
-            if (response.ok) {
-                const returned_json = await response.json();
-                setResponse(returned_json); // Set the response data
+            if (response.status === 200) {
+                const returnedData = response.data;
+                console.log(returnedData);
+                console.log(returnedData.response);
+                setResponse(returnedData);
+                // Now you can access the response data
             } else {
                 console.error('Failed. HTTP status code:', response.status);
             }
         } catch (error) {
-            console.error('Error: ', error);
+            console.error('Error:', error.message);
         }
     };
 
