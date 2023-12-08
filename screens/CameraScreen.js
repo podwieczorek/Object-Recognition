@@ -21,10 +21,12 @@ function CameraScreen() {
     const takePictureAndSend = async () => {
         try {
             if (cameraRef.current && isFocused) {
-                const photo = await cameraRef.current.takePictureAsync();
+                const photo = await cameraRef.current.takePictureAsync({
+                    quality: 0.5
+                });
                 console.log('Captured Photo:', photo);
                 if (photo) {
-                    await sendPicture(photo);
+                    //await sendPicture(photo);
                 } else {
                     console.error('Failed to capture a photo.');
                 }
