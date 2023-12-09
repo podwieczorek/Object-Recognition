@@ -3,13 +3,13 @@ import { View, StyleSheet, Text } from 'react-native';
 import { Camera } from 'expo-camera';
 import { useIsFocused } from '@react-navigation/native';
 import BoundingBox from '../components/BoundingBox';
-import axios from 'axios';
+import { recognizeObjects } from '../utils/http';
 
 function CameraScreen() {
     const [hasPermission, setHasPermission] = useState(null);
     const cameraRef = useRef(null);
     const isFocused = useIsFocused();
-    const [response, setResponse] = useState(null);
+    const [boundingBoxes, setBoundingBoxes] = useState([]);
 
     useEffect(() => {
         (async () => {
@@ -21,12 +21,11 @@ function CameraScreen() {
     const takePictureAndSend = async () => {
         try {
             if (cameraRef.current && isFocused) {
-                const photo = await cameraRef.current.takePictureAsync({
-                    quality: 0.5
-                });
-                console.log('Captured Photo:', photo);
+                const photo = await cameraRef.current.takePictureAsync({ quality: 0.5 });
                 if (photo) {
-                    //await sendPicture(photo);
+                    // this function sends a picture and returns an array of objects (bounding boxes)
+                    const boxes = await recognizeObjects(photo);
+                    setBoundingBoxes(boxes);
                 } else {
                     console.error('Failed to capture a photo.');
                 }
@@ -36,46 +35,18 @@ function CameraScreen() {
         }
     };
 
-    const sendPicture = async (photo) => {
-        try {
-            const formData = new FormData();
-            formData.append('photo', {
-                uri: photo.uri,
-                type: 'image/jpeg',
-                name: 'photo.jpg',
-            });
-            console.log(formData);
-
-            const response = await axios.post('http://34.168.74.2:5000/detections', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            if (response.status === 200) {
-                const returnedData = response.data;
-                console.log(returnedData);
-                console.log(returnedData.response);
-                setResponse(returnedData);
-                // Now you can access the response data
-            } else {
-                console.error('Failed. HTTP status code:', response.status);
-            }
-        } catch (error) {
-            console.error('Error:', error.message);
-        }
-    };
-
-    const drawBoundingBox = () => {
-        if (response) {
-            return (
+    const drawBoundingBoxes = () => {
+        if (boundingBoxes.length != 0) {
+            return boundingBoxes.map((box, index) => (
                 <BoundingBox
-                    width={response.width}
-                    height={response.height}
-                    top={response.top}
-                    left={response.left}
-                    objectLabel={response.objectLabel}
+                    key={index}
+                    width={box.width}
+                    height={box.height}
+                    top={box.top}
+                    left={box.left}
+                    objectLabel={box.objectLabel}
                 />
-            );
+            ));
         }
         return null;
     };
@@ -98,7 +69,7 @@ function CameraScreen() {
         <View style={styles.container}>
             {isFocused && ( // Only render the Camera when the screen is focused, without it the camera screen is visible only the first time
                 <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={cameraRef} onCameraReady={startAutomaticCapture}>
-                    {drawBoundingBox()}
+                    {drawBoundingBoxes()}
                 </Camera>
             )}
         </View>
