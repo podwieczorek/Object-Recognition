@@ -40,6 +40,7 @@ export default function App() {
             drawerIcon: ({ color, size }) => (
               <Ionicons name="camera-outline" color={color} size={size} />
             ),
+            unmountOnBlur: true
           }}
         />
 

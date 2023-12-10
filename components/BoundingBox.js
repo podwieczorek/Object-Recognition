@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 
 function BoundingBox({ width, height, top, left, objectLabel }) {
     return (
-        <View style={{ position: 'absolute', top, left }}>
+        <View style={{ position: 'absolute', top, left, flexDirection: 'row'}}>
             <View
                 style={{
                     width,
