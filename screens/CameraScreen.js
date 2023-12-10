@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef} from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Camera } from 'expo-camera';
 import { useIsFocused } from '@react-navigation/native';
@@ -10,15 +10,13 @@ function CameraScreen() {
     const cameraRef = useRef(null);
     const isFocused = useIsFocused();
     const [boundingBoxes, setBoundingBoxes] = useState([]);
-    // old bounding boxes are needed to prevent weird camera behaviour when there are no new bounding boxes
-    const [oldBoundingBoxes, setOldBoundingBoxes] = useState([]);
     const intervalRef = useRef(null);
 
     useEffect(() => {
         const startAutomaticCapture = () => {
             intervalRef.current = setInterval(() => {
                 takePictureAndSend();
-            }, 100); // Capture, send a picture, draw bounding boxes every 100 ms
+            }, 200); // Capture, send a picture, draw bounding boxes every 200 ms
         };
         if (isFocused) {
             startAutomaticCapture();
@@ -38,13 +36,14 @@ function CameraScreen() {
     const takePictureAndSend = async () => {
         try {
             if (cameraRef.current && isFocused) {
-                const photo = await cameraRef.current.takePictureAsync({ quality: 0.3 });
+                const photo = await cameraRef.current.takePictureAsync({ quality: 0.1 });
+                console.log(photo);
                 if (photo) {
+                    // send photo to server and return recognised objects (array of bounding boxes)
                     const boxes = await recognizeObjects(photo);
-                    setBoundingBoxes(boxes);
-
+                    // set new bounding boxes only when new are received
                     if (boxes.length !== 0) {
-                        setOldBoundingBoxes(boxes);
+                        setBoundingBoxes(boxes);
                     }
                 } else {
                     console.error('Failed to capture a photo.');
@@ -58,18 +57,6 @@ function CameraScreen() {
     const drawBoundingBoxes = () => {
         if (boundingBoxes.length !== 0) {
             return boundingBoxes.map((box, index) => (
-                <BoundingBox
-                    key={index}
-                    width={box.width}
-                    height={box.height}
-                    top={box.top}
-                    left={box.left}
-                    objectLabel={box.objectLabel}
-                />
-            ));
-        }
-        else if (oldBoundingBoxes.length !== 0) {
-            return oldBoundingBoxes.map((box, index) => (
                 <BoundingBox
                     key={index}
                     width={box.width}

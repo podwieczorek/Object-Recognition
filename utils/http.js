@@ -13,10 +13,6 @@ export async function recognizeObjects(photo) {
             },
         });
         if (response.status === 200) {
-            // console.log("response.data: ", response.data);
-            // console.log("response.data.response: ", response.data.response);
-            // console.log("response.data.response[0]: ", response.data.response[0]);
-            
             boundingBoxes = getBoundingBoxesFromResponseData(response.data.response[0]);
         } 
         else {
@@ -40,7 +36,6 @@ const createPhotoFormData = (photo) => {
     return formData;
 }
 
-// TODO check if this is needed
 const getBoundingBoxesFromResponseData = (responseData) => {
     let boundingBoxes = []
     for (const objectData of responseData){
@@ -51,7 +46,6 @@ const getBoundingBoxesFromResponseData = (responseData) => {
             left: objectData.left,
             objectLabel: objectData.objectLabel
         }
-        //console.log("boundingBox: ", boundingBox)
         boundingBoxes.push(boundingBox);
     }
     return boundingBoxes;
