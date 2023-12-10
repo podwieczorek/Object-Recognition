@@ -36,6 +36,7 @@ export default function App() {
         <Drawer.Screen
           name="Object Recognition"
           component={CameraScreen}
+          lazy={false}
           options={{
             drawerIcon: ({ color, size }) => (
               <Ionicons name="camera-outline" color={color} size={size} />

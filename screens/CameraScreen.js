@@ -12,24 +12,38 @@ function CameraScreen() {
     const [boundingBoxes, setBoundingBoxes] = useState([]);
     // old bounding boxes are needed to prevent weird camera behaviour when there are no new bounding boxes
     const [oldBoundingBoxes, setOldBoundingBoxes] = useState([]);
+    const intervalRef = useRef(null);
+
+    useEffect(() => {
+        const startAutomaticCapture = () => {
+            intervalRef.current = setInterval(() => {
+                takePictureAndSend();
+            }, 100); // Capture, send a picture, draw bounding boxes every 100 ms
+        };
+        if (isFocused) {
+            startAutomaticCapture();
+        } 
+    }, [isFocused]);
 
     useEffect(() => {
         (async () => {
             const { status } = await Camera.requestCameraPermissionsAsync();
             setHasPermission(status === 'granted');
+            // Start automatic capture when the component mounts
+            // it gives warnings but only this way it works
+            if (isFocused){startAutomaticCapture();}
         })();
-    }, []);
+    }, [isFocused]);
 
     const takePictureAndSend = async () => {
         try {
             if (cameraRef.current && isFocused) {
-                const photo = await cameraRef.current.takePictureAsync({ quality: 0.3});
+                const photo = await cameraRef.current.takePictureAsync({ quality: 0.3 });
                 if (photo) {
-                    // this function sends a picture and returns an array of objects (bounding boxes)
                     const boxes = await recognizeObjects(photo);
                     setBoundingBoxes(boxes);
-                    
-                    if(boxes.length !== 0){
+
+                    if (boxes.length !== 0) {
                         setOldBoundingBoxes(boxes);
                     }
                 } else {
@@ -54,7 +68,7 @@ function CameraScreen() {
                 />
             ));
         }
-        else if(oldBoundingBoxes.length !== 0){
+        else if (oldBoundingBoxes.length !== 0) {
             return oldBoundingBoxes.map((box, index) => (
                 <BoundingBox
                     key={index}
@@ -69,12 +83,6 @@ function CameraScreen() {
         return null;
     };
 
-    const startAutomaticCapture = () => {
-        setInterval(() => {
-            takePictureAndSend();
-        }, 100); // Capture, send a picture, draw bounding boxes every 200 ms
-    };
-
     if (hasPermission === null) {
         return <View style={styles.container}><Text>Requesting camera permission...</Text></View>;
     }
@@ -85,8 +93,8 @@ function CameraScreen() {
 
     return (
         <View style={styles.container}>
-            {isFocused &&  ( // Only render the Camera when the screen is focused, without it the camera screen is visible only the first time
-                <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={cameraRef} onCameraReady={startAutomaticCapture}>
+            {isFocused && (
+                <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={cameraRef}>
                     {drawBoundingBoxes()}
                 </Camera>
             )}
