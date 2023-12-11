@@ -11,11 +11,12 @@ function AboutUsScreen() {
                 />
             </View>
             <Text style={styles.bigText}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a feugiat dolor. Pellentesque eget justo non odio bibendum aliquam et sed dui. 
-            Donec libero sem, venenatis a euismod tincidunt. Sed scelerisque placerat velit at tincidunt. Vivamus sed nunc maximus, venenatis lacus varius, aliquam nulla.
+            Welcome to Object Recognition Application, where cutting-edge technology meets a passion for innovation. We are a dedicated team of developers on a mission to 
+            redefine the way we interact with the world through image recognition.
             {'\n\n'} 
-            Pellentesque consectetur ante. Sed mattis consectetur felis, sagittis pretium velit iaculis sed. Donec massa ligula, lacinia ut nibh a, faucibus aliquam nisl. 
-            Aliquam scelerisque turpis sem, vel laoreet erat vehicula eget. Proin vitae faucibus sem. Mauris iaculis tellus risus, non rhoncus tortor varius quis.
+            With a user-friendly interface and real-time recognition capabilities, Recognition Application is designed to be your go-to companion for exploring the world around you.
+            Our commitment to continuous improvement means that you can expect regular updates, ensuring that you always have access to the latest advancements 
+            in image recognition technology.
             </Text>
             <StatusBar style="auto" />
         </View>

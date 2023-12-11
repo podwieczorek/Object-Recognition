@@ -1,5 +1,10 @@
 # Object-Recognition Project Documentation
 
+## Table of contents
+* [Server implementation details](#Object-recognition-server-setup)
+* [App UI](#App-UI)
+* [App implementation details](#App-implementation-details)
+
 ## Object recognition server setup
 
 ### Google Cloud parameters:
@@ -33,7 +38,7 @@ python app.py
 ### API request parameters
 ![API request](api_request.png)
 ### API request example response
-```
+```json
 {
     "response": [
         {
@@ -54,7 +59,7 @@ python app.py
 }
 ```
 ### API endpoint details
-```
+```python
 @app.route('/detections', methods=['POST'])
 def get_detections():
     raw_images = []
@@ -68,7 +73,7 @@ def get_detections():
     response = []
 ```
 Transform image to match predefined size
-```
+```python
 
     raw_img = raw_images[0]
     num = 0
@@ -76,14 +81,14 @@ Transform image to match predefined size
     img = transform_images(img, size)
 ```
 Detect objects on image
-```
+```python
     t1 = time.time()
     boxes, scores, classes, nums = yolo.predict(img)
     t2 = time.time()
     print('time: {}'.format(t2 - t1))
 ```
 JSON creation loop
-```
+```python
     boxes, objectness, classes, nums = boxes[0], scores[0], classes[0], nums[0]
     wh = np.flip(img.shape[0:2])[0]
     # For each object detected
@@ -106,11 +111,109 @@ JSON creation loop
         response.append(object)
 ```
 Return response
-```   
+```python   
     try:
         return jsonify({"response":response}), 200
     except FileNotFoundError:
         abort(404)
 ```
 ## App UI
+
+Our User Interface is very simple and intuitive.
+You can navigate the app through a user-friendly drawer navigation system.
+It consists of three screens: Home, Camera and AboutUs.
+
+1. Home screen shows our logo and button that takes the user to Camera screen.
+
+2. AboutUs screen describes our team and our product.
+
+3. Camera screen is the main feature: it shows the preview of camera and bounding boxes of the recognized objects.
+
+
 ## App implementation details
+
+### Screens and navigation
+As previously mentioned, our app has threee screens and navigates with drawer navigation system.
+Navigating to Camera Screen is also possible through CustomButton in Home Screen:
+
+```js
+const HomeScreenWithNavigation = ({ navigation }) => {
+  const goToCameraScreenHandler = () => {
+    navigation.navigate('Object Recognition');
+  };
+
+  return <HomeScreen onClickButton={goToCameraScreenHandler} />;
+};
+```
+
+### Custom Components
+
+#### CustomButton
+The CustomButton component is used in HomeScreen to create button with customized text and color.
+
+```js
+function CustomButton({ title, onPress }) {
+  return (
+    <TouchableOpacity
+      style={styles.button}
+      onPress={onPress}
+    >
+      <Text style={styles.buttonText}>{title}</Text>
+    </TouchableOpacity>
+  );
+}
+```
+
+#### BoundingBox
+The BoundingBox component is responsible for rendering bounding boxes around recognized objects on the Camera screen. 
+
+```js
+function BoundingBox({ width, height, top, left, objectLabel }) {
+    return (
+        <View style={{ position: 'absolute', top: TOP_RATIO*top, left, flexDirection: 'row'}}>
+            <View
+                style={{
+                    width: width*RATIO,
+                    height: height*RATIO,
+                    borderColor: '#5e0acc',
+                    borderWidth: 2,
+                }}
+            />
+            <Text style={{ color: '#5e0acc', position: 'absolute', bottom: height*RATIO, left: 0, padding: 2, backgroundColor: 'transparent' }}>
+                {objectLabel}
+            </Text>
+        </View>
+    );
+}
+```
+
+### Server Requests
+
+The app communicates with the server for object recognition using the axios library. 
+The recognizeObjects function sends a photo to the server and processes the response to extract bounding box information.
+
+```js
+export async function recognizeObjects(photo) {
+    let boundingBoxes = [];
+
+    try {
+        const formData = createPhotoFormData(photo);
+        const response = await axios.post(BACKEND_URL, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        if (response.status === 200) {
+            boundingBoxes = getBoundingBoxesFromResponseData(response.data.response);
+        } 
+        else {
+            console.error('Failed. HTTP status code:', response.status);
+        }
+    }
+    catch (error) {
+        console.error('Error:', error.message);
+    }
+
+    return boundingBoxes;
+}
+```

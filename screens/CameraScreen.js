@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef} from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, LogBox } from 'react-native';
 import { Camera } from 'expo-camera';
 import { useIsFocused } from '@react-navigation/native';
 import BoundingBox from '../components/BoundingBox';
 import { recognizeObjects } from '../utils/http';
+
+LogBox.ignoreAllLogs();
 
 function CameraScreen() {
     const [hasPermission, setHasPermission] = useState(null);
@@ -36,7 +38,7 @@ function CameraScreen() {
     const takePictureAndSend = async () => {
         try {
             if (cameraRef.current && isFocused) {
-                const photo = await cameraRef.current.takePictureAsync({ quality: 0.1 });
+                const photo = await cameraRef.current.takePictureAsync({ quality: 0.3 });
                 console.log(photo);
                 if (photo) {
                     // send photo to server and return recognised objects (array of bounding boxes)

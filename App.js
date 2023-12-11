@@ -1,5 +1,4 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
@@ -66,9 +65,3 @@ const HomeScreenWithNavigation = ({ navigation }) => {
 
   return <HomeScreen onClickButton={goToCameraScreenHandler} />;
 };
-
-const styles = StyleSheet.create({
-  rootScreen: {
-    flex: 1,
-  },
-});
