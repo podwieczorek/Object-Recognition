@@ -13,7 +13,7 @@ export async function recognizeObjects(photo) {
             },
         });
         if (response.status === 200) {
-            boundingBoxes = getBoundingBoxesFromResponseData(response.data.response[0]);
+            boundingBoxes = getBoundingBoxesFromResponseData(response.data.response);
         } 
         else {
             console.error('Failed. HTTP status code:', response.status);

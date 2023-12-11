@@ -36,7 +36,7 @@ function CameraScreen() {
     const takePictureAndSend = async () => {
         try {
             if (cameraRef.current && isFocused) {
-                const photo = await cameraRef.current.takePictureAsync({ quality: 0.1 });
+                const photo = await cameraRef.current.takePictureAsync({ quality: 0.3 });
                 console.log(photo);
                 if (photo) {
                     // send photo to server and return recognised objects (array of bounding boxes)
