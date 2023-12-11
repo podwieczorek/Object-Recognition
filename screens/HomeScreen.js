@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, StyleSheet, Text, Button, Image} from "react-native";
+import { View, StyleSheet, Text, Image} from "react-native";
 
 import CustomButton from "../components/CustomButton";
 
