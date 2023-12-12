@@ -1,11 +1,9 @@
-import React, { useEffect, useState, useRef} from 'react';
-import { View, StyleSheet, Text, LogBox } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
 import { Camera } from 'expo-camera';
 import { useIsFocused } from '@react-navigation/native';
 import BoundingBox from '../components/BoundingBox';
 import { recognizeObjects } from '../utils/http';
-
-LogBox.ignoreAllLogs();
 
 function CameraScreen() {
     const [hasPermission, setHasPermission] = useState(null);
@@ -14,32 +12,39 @@ function CameraScreen() {
     const [boundingBoxes, setBoundingBoxes] = useState([]);
     const intervalRef = useRef(null);
 
+    const startAutomaticCapture = async () => {
+        intervalRef.current = setInterval(() => {
+            takePictureAndSend();
+        }, 200); // Capture, send a picture, draw bounding boxes every 200 ms
+    };
+
+    const stopAutomaticCapture = async () => {
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+        }
+    };
+
     useEffect(() => {
-        const startAutomaticCapture = () => {
-            intervalRef.current = setInterval(() => {
-                takePictureAndSend();
-            }, 200); // Capture, send a picture, draw bounding boxes every 200 ms
-        };
         if (isFocused) {
             startAutomaticCapture();
-        } 
+        } else {
+            stopAutomaticCapture();
+        }
+        return () => stopAutomaticCapture();
     }, [isFocused]);
 
     useEffect(() => {
         (async () => {
             const { status } = await Camera.requestCameraPermissionsAsync();
             setHasPermission(status === 'granted');
-            // Start automatic capture when the component mounts
-            // it gives warnings but only this way it works
-            if (isFocused){startAutomaticCapture();}
         })();
-    }, [isFocused]);
+    }, []);
 
     const takePictureAndSend = async () => {
+        console.log("This log is needed");
         try {
             if (cameraRef.current && isFocused) {
                 const photo = await cameraRef.current.takePictureAsync({ quality: 0.3 });
-                console.log(photo);
                 if (photo) {
                     // send photo to server and return recognised objects (array of bounding boxes)
                     const boxes = await recognizeObjects(photo);

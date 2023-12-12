@@ -1,20 +1,31 @@
 {
   "expo": {
-    "name": "Object-Recognition",
+    "name": "Object Recognition",
     "slug": "Object-Recognition",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/object_recognition.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/object_recognition2.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
+    ],
     "ios": {
+      "buildNumber": "1.0.0",
       "supportsTablet": true,
       "infoPlist": {
         "NSCameraUsageDescription": "Enable camera access",
@@ -22,14 +33,16 @@
       }
     },
     "android": {
+      "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/object_recognition.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
         "CAMERA",
         "RECORD_AUDIO"
-      ]
+      ],
+      "package": "com.podwieczorek.ObjectRecognition"
     },
     "web": {
       "favicon": "./assets/favicon.png"

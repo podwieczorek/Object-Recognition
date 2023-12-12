@@ -123,12 +123,15 @@ Our User Interface is very simple and intuitive.
 You can navigate the app through a user-friendly drawer navigation system.
 It consists of three screens: Home, Camera and AboutUs.
 
+![UI](ui.png)
+
 1. Home screen shows our logo and button that takes the user to Camera screen.
 
 2. AboutUs screen describes our team and our product.
 
 3. Camera screen is the main feature: it shows the preview of camera and bounding boxes of the recognized objects.
 
+![iOS_UI](ui_ios.png)
 
 ## App implementation details
 
