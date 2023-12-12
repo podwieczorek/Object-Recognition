@@ -131,6 +131,7 @@ It consists of three screens: Home, Camera and AboutUs.
 
 3. Camera screen is the main feature: it shows the preview of camera and bounding boxes of the recognized objects.
 
+![iOS_UI](ui_ios.png)
 
 ## App implementation details
 
