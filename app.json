@@ -14,6 +14,16 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
+    ],
     "ios": {
       "buildNumber": "1.0.0",
       "supportsTablet": true,
@@ -31,10 +41,16 @@
       "permissions": [
         "CAMERA",
         "RECORD_AUDIO"
-      ]
+      ],
+      "package": "com.podwieczorek.ObjectRecognition"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c7412354-30ac-40c4-8980-4a2aba9a9165"
+      }
     }
   }
 }
